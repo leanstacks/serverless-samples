@@ -1,0 +1,15 @@
+{
+  "name": "serverless-samples-rest-dynamodb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mwarman/serverless-samples",
+  "author": "Matt Warman",
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "aws-sdk": "^2.415.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "serverless-http": "^1.9.1"
+  }
+}
