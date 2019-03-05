@@ -1,5 +1,5 @@
 {
-  "name": "rest-hello",
+  "name": "serverless-samples-rest-hello",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/mwarman/serverless-samples",

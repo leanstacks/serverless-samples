@@ -1,4 +1,4 @@
-service: rest-hello
+service: samples-rest-hello
 
 provider:
   name: aws
