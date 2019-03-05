@@ -1,0 +1,7 @@
+# Node Package Files
+node_modules
+*/node_modules
+
+# Serverless Files
+.serverless
+*/.serverless
