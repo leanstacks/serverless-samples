@@ -1,4 +1,16 @@
+plugins:
+  - serverless-domain-manager
+
 service: samples-custom-domain
+
+custom:
+  customDomain:
+    domainName: serverless-samples.leanstacks.net
+    basePath: ''
+    certificateName: '*.leanstacks.net'
+    stage: ${self:custom.stage}
+    createRoute53Record: true
+  stage: ${opt:stage, self:provider.stage}
 
 provider:
   name: aws
