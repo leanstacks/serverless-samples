@@ -1,0 +1,29 @@
+service: samples-custom-domain-users
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: ${self:custom.domains.${self:custom.stage}}
+    basePath: 'users'
+    certificateName: '*.leanstacks.net'
+    stage: ${self:custom.stage}
+    createRoute53Record: true
+  domains:
+    dev: serverless-samples-dev.leanstacks.net
+    prod: serverless-samples.leanstacks.net
+  stage: ${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+
+functions:
+  getUsers:
+    handler: index.handler
+    events:
+      - http: GET /
