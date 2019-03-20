@@ -1,0 +1,40 @@
+##
+# The API project creates the API Gateway API and root resource, i.e. "/".
+# A simple "info" function with a HTTP event ensures a API Gateway REST API is 
+#  deployed to AWS.
+# The API and root resource identifiers are explicitly output from this project 
+#  so that they may be used within the "messages" serverless.yml configuration.
+##
+service: samples-shared-api-base
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  memorySize: 128
+  timeout: 10
+
+functions:
+  info:
+    handler: index.handler
+    environment:
+      API_VERSION_MAJOR: 1
+      API_VERSION_MINOR: 0
+      API_VERSION_PATCH: 0
+    events:
+      - http: 
+          path: /info
+          method: get
+
+# The resources block contains raw AWS CloudFormation markup.
+resources:
+  Outputs:
+    RestApiId:
+      Description: API Gateway REST API Identifier
+      Value: 
+        Ref: ApiGatewayRestApi
+    RestApiRootResourceId:
+      Description: API Root Resource Identifier
+      Value:
+        "Fn::GetAtt": [ ApiGatewayRestApi, RootResourceId ]
