@@ -1,0 +1,78 @@
+service: samples-lambda-authorizer-jwt
+
+custom:
+  audience:     # token audience attribute
+    dev: "https://api-dev.leanstacks.net"
+    qa: "https://api-qa.leanstacks.net"
+    prod: "https://api.leanstacks.net"
+  issuer:     # token issuer attribute
+    dev: "https://api-dev.leanstacks.net"
+    qa: "https://api-qa.leanstacks.net"
+    prod: "https://api.leanstacks.net"
+  publicKey:     # public key for JWT verification
+    dev: |
+      -----BEGIN PUBLIC KEY-----
+      MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJWICeIzMDhWHH25LcJVY6N7hc76HnY4
+      nZIarSgfhFJDRyFyvfAzB6F9R+TWUH+kGB1ypd+jgNLpyGHt3YloKtsCAwEAAQ==
+      -----END PUBLIC KEY-----
+    qa: ""
+    prod: ""
+  privateKey:     # private key for JWT signing
+    dev: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIBOgIBAAJBAJWICeIzMDhWHH25LcJVY6N7hc76HnY4nZIarSgfhFJDRyFyvfAz
+      B6F9R+TWUH+kGB1ypd+jgNLpyGHt3YloKtsCAwEAAQJAbN2oZHlkJ//5qkcB27ST
+      YFj0KKbNOsEpZ0/otYeMrN6MphIt8D3IICyBQVej0C/U3cjox3aeC5phVVeqP9u6
+      EQIhAPt8G95qZ2rID7S7C8E29+M0xS7TGkbkxpejuhzHIbynAiEAmDdTI4qrJpDt
+      vobEYibiSIQJVmINLCPlP5L8EvU2oq0CIQCKTsBY+zXzMSIKKJCXa667I0uKrAkY
+      kjtyLFZv+0hfowIgGHy1/D6/n9mq1X66swuMVZwgIGxvsA0qQRr1QFuAaZUCIGh4
+      hIZ+dYvpHIvAn819aKFqi4dBeJ/PMxqYTCSseWi5
+      -----END RSA PRIVATE KEY-----
+    qa: ""
+    prod: ""
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  memorySize: 128
+  timeout: 10
+
+functions:
+  getMessage:
+    handler: handler/messages.handler
+    events:
+      - http: 
+          path: /messages/{proxy+}
+          method: get
+          authorizer: 
+            name: tokenAuthorizer
+            resultTtlInSeconds: 300     # default response cache time-to-live is 5 minutes
+            identitySource: method.request.header.X-Auth-Token     # default token location is X-Auth-Token header
+  listMessages:
+    handler: handler/messages.handler
+    events:
+      - http: 
+          path: /messages
+          method: get
+          authorizer: 
+            name: tokenAuthorizer
+            resultTtlInSeconds: 300
+            identitySource: method.request.header.X-Auth-Token
+  requestToken:
+    handler: handler/tokens.handler
+    environment:
+      AUDIENCE: ${self:custom.audience.${self:provider.stage}}          # issuer placed within the token
+      ISSUER: ${self:custom.issuer.${self:provider.stage}}              # issuer placed within the token
+      PRIVATE_KEY: ${self:custom.privateKey.${self:provider.stage}}     # private key to sign the token
+    events:
+      - http: 
+          path: /auth/request_token
+          method: post
+  tokenAuthorizer:
+    handler: handler/authorizer.handler
+    environment:
+      AUDIENCE: ${self:custom.audience.${self:provider.stage}}        # issuer placed within the token
+      ISSUER: ${self:custom.issuer.${self:provider.stage}}            # issuer to verify the token
+      PUBLIC_KEY: ${self:custom.publicKey.${self:provider.stage}}     # public key to verify the token
