@@ -1,0 +1,24 @@
+service: samples-environment-ssm
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 128
+  environment:
+    GREETING_AUDIENCE: ${ssm:/${self:service}/${self:provider.stage}/greeting-audience}
+
+functions:
+  hello:
+    handler: index.handler
+    environment:
+      GREETING_PREFIX: 'Hello'
+    events:
+      - http: GET /hello
+  goodbye:
+    handler: index.handler
+    environment:
+      GREETING_PREFIX: 'Goodbye'
+    events:
+      - http: GET /goodbye
