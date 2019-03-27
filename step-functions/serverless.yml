@@ -1,0 +1,39 @@
+service: samples-step-functions
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  memorySize: 128
+
+functions:
+  createMessage:
+    handler: index.createMessage
+  toUppercase:
+    handler: index.toUppercase
+
+stepFunctions:
+  stateMachines:
+    createMessage:
+      name: ${self:service}-${self:provider.stage}-createMessage
+      events:
+        - http:
+            path: /messages
+            method: POST
+      definition:
+        Comment: A sample state machine that creates a Hello World message and converts it to uppercase.
+        StartAt: CreateMessage
+        States:
+          CreateMessage:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-createMessage"
+            Next: ToUppercase
+          ToUppercase:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-toUppercase"
+            End: true
