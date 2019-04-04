@@ -1,0 +1,64 @@
+service: samples-stepf-api-sync
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  memorySize: 128
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - states:StartExecution
+      Resource:
+        - ${self:resources.Outputs.CreateMessageStateMachineArn.Value}
+    - Effect: Allow
+      Action:
+        - states:GetExecutionHistory
+      Resource:
+        - "*"
+
+functions:
+  createMessage:
+    handler: handler/createMessage.handle
+    environment:
+      STATE_MACHINE_ARN: ${self:resources.Outputs.CreateMessageStateMachineArn.Value}
+    events:
+      - http:
+          path: /messages
+          method: POST
+  formatMessage:
+    handler: handler/formatMessage.handle
+  toUppercase:
+    handler: handler/toUpperCase.handle
+
+stepFunctions:
+  stateMachines:
+    createMessage:
+      name: ${self:service}-${self:provider.stage}-createMessage
+      definition:
+        Comment: A sample state machine that creates a Hello World message and converts it to uppercase.
+        StartAt: FormatMessage
+        States:
+          FormatMessage:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-formatMessage"
+            Next: ToUppercase
+          ToUppercase:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-toUppercase"
+            Next: EndState
+          EndState:
+            Type: Pass
+            End: true
+
+resources:
+  Outputs:
+    CreateMessageStateMachineArn:
+      Description: ARN of the CreateMessage Step Functions State Machine
+      Value:
+        Ref: SamplesDashstepfDashapiDashsyncDashdevDashcreateMessage
