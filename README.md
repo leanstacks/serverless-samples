@@ -100,11 +100,11 @@ While it is not typical to invoke a Step Functions State Machine *synchronously*
 
 ## See Also
 
-[LEANSTACKS](leanstacks)  
-[LEANSTACKS Serverless Samples](ls-serverless)  
-[Serverless Framework](sls)  
-[Serverless Blog](sls-blog)  
-[Serverless Docs for AWS](sls-aws)  
+[LEANSTACKS][leanstacks]  
+[LEANSTACKS Serverless Samples][ls-serverless]  
+[Serverless Framework][sls]  
+[Serverless Blog][sls-blog]  
+[Serverless Docs for AWS][sls-aws]  
 
 [leanstacks]: https://leanstacks.com/ "LEANSTACKS"
 [ls-serverless]: https://leanstacks.com/stacks.html#serverless-samples "Serverless Samples | LEANSTACKS"
