@@ -76,6 +76,10 @@ This sample application is the introductory example for using Lambda Authorizers
 
 This sample serverless application is an example of how to implement a Lambda Authorizer, formerly called a *Custom Authorizer*, with JSON Web Tokens (JWT) for a REST API.
 
+### rest-cognito-authorizer
+
+This sample serverless application is a basic example of how to implement a Cognito Authorizer which authenticates requests to a REST API with a Cognito User Pool.
+
 ### shared-api
 
 This sample serverless application is an example of how to implement a shared API Gateway REST API.

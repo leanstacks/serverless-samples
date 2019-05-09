@@ -9,3 +9,6 @@ yarn-*.log
 # Serverless Files
 .serverless
 */.serverless
+
+# Sample-Specific Files
+rest-cognito-authorizer/auth.json
