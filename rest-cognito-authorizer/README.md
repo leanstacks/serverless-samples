@@ -1,6 +1,6 @@
-# Sample: REST Services with Lambda Authorizer
+# Sample: REST Services with Cognito Authorizer
 
-This sample serverless application is a basic example of how to implement a Cognito Authorizer for a REST API.
+This sample serverless application is a basic example of how to implement a Cognito Authorizer for a REST API. In this sample, tokens are obtained from an AWS Cognito User Pool and the identity token is passed to an API Gateway endpoint to authorize access.
 
 ## How to Use
 
