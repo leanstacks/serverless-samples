@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: service/user-service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: service/user-service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * UserService module.
+ * @module service/user-service
+ */
+
+const ValidationError = require('../error/validation-error');
+const DatabaseParamsFactory = require('../params/database/user');
+const database = require('../util/database');
+
+// Service responsibilities:
+// * implement business logic / conditions / rules
+// * sequence business logic
+// * store data
+
+/**
+ * Find a User by the identifier.
+ * @param {string} userId A User identifier.
+ * @returns {Promise&lt;User|null,Error>} A Promise which resolves to a User object if found or null if not found; otherwise rejects with an error.
+ */
+exports.find = async (userId) => {
+
+  console.log('UserService::find');
+
+  const params = DatabaseParamsFactory.build('findUser', { userId });
+  console.log(`params:\n${JSON.stringify(params, null, 2)}`);
+  const data = await database.get(params);
+
+  return data.Item;
+
+};
+
+/**
+ * List all Users.
+ * @returns {Promise&lt;User[], Error>}A Promise which resolves to a collection of User objects; otherwise rejects with an error.
+ */
+exports.list = async () => {
+
+  console.log('UserService.list');
+
+  const params = DatabaseParamsFactory.build('listUsers');
+  console.log(`params:\n${JSON.stringify(params, null, 2)}`);
+  const data = await database.scan(params);
+
+  return data.Items;
+
+};
+
+/**
+ * Create a User.
+ * @param {Object} user - A User object.
+ * @param {string} user.userId - A unique identifier.
+ * @param {string} user.name - A full name.
+ * @returns {Promise&lt;User, Error>} A Promise which resolves to the created User object if successful; otherwise rejects with an error.
+ */
+exports.create = async (user) => {
+
+  console.log('UserService::create');
+
+  try {
+
+    const { name, userId } = user;
+    const createdAt = new Date().toISOString();
+
+    const userObj = {
+      userId,
+      name,
+      createdAt
+    };
+    console.log(`userObj:\n${JSON.stringify(userObj, null, 2)}`);
+
+    const params = DatabaseParamsFactory.build('createUser', { user: userObj });
+    console.log(`params:\n${JSON.stringify(params, null, 2)}`);
+    await database.put(params);
+
+    return userObj;
+
+  } catch (error) {
+
+    if (error.name === 'ConditionalCheckFailedException') {
+      throw new ValidationError('User values in use.');
+    }
+    console.log('Error caught in service operation. Detail: ', error);
+    throw error;
+
+  }
+
+};
+
+/**
+ * Update a User.
+ * @param {Object} user - A User object.
+ * @param {string} user.userId - A unique identifier.
+ * @param {string} user.name - A full name.
+ * @returns {Promise&lt;User|null,Error>}A Promise which resolves to the updated User object if successful or null if not found; otherwise rejects with an error.
+ */
+exports.update = async (user) => {
+
+  console.log('UserService::update');
+
+  try {
+    const { name, userId } = user;
+
+    const updatedAt = new Date().toISOString();
+
+    const userObj = {
+      userId,
+      name,
+      updatedAt
+    };
+    console.log(`userObj:\n${JSON.stringify(userObj, null, 2)}`);
+
+    const params = DatabaseParamsFactory.build('updateUser', { user: userObj });
+    console.log(`params:\n${JSON.stringify(params, null, 2)}`);
+    const data = await database.update(params);
+
+    return data.Attributes;
+
+  } catch (error) {
+
+    if (error.name === 'ConditionalCheckFailedException') {
+      // not found
+      return null;
+    }
+    console.log('Error caught in service operation. Detail: ', error);
+    throw error;
+
+  }
+
+};
+
+/**
+ * Delete a User.
+ * @param {string} userId - A User identifier.
+ * @returns {Promise&lt;null, Error>} A Promise which resolves to empty if successful; otherwise rejects with an error.
+ */
+exports.delete = async (userId) => {
+
+  console.log('UserService::delete');
+
+  const params = DatabaseParamsFactory.build('deleteUser', { userId });
+  console.log(`params:\n${JSON.stringify(params, null, 2)}`);
+  await database.delete(params);
+
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controller_user-create.html">controller/user-create</a></li><li><a href="module-controller_user-delete.html">controller/user-delete</a></li><li><a href="module-controller_user-find.html">controller/user-find</a></li><li><a href="module-controller_user-list.html">controller/user-list</a></li><li><a href="module-controller_user-update.html">controller/user-update</a></li><li><a href="module-params_database_user.html">params/database/user</a></li><li><a href="module-service_user-service.html">service/user-service</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Dec 09 2021 11:31:22 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
