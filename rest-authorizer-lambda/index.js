@@ -5,13 +5,17 @@ const app = express();
 /**
  * Handles GET requests to the '/hello' endpoint.
  */
-app.get('/hello', function(req,res) {
+app.get('/hello', function (req, res) {
+
+  console.log('Route::hello');
+
   // the context contains any attributes passed from the authorizer function
   console.log(`context: ${JSON.stringify(req.context, null, 2)}`);
 
   res.json({
     message: 'Hello World!'
   });
+
 });
 
 /**

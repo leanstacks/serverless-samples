@@ -66,7 +66,7 @@ This sample serverless application illustrates how to implement REST services wh
 
 This sample builds upon the `rest-environment` sample by sourcing the environment variables from AWS Systems Manager Parameter Store, a.k.a. SSM.
 
-### rest-lambda-authorizer
+### rest-authorizer-lambda
 
 This sample serverless application is a basic example of how to implement a Lambda Authorizer, formerly called a *Custom Authorizer*, for a REST API.
 
