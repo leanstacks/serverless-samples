@@ -5,15 +5,16 @@ custom:
     dev: 'Developers'
     qa: 'Testers'
     prod: 'World'
+  stage: ${opt:stage, self:provider.stage}
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs14.x
   region: us-east-1
-  stage: ${opt:stage, 'dev'}
+  stage: dev
   memorySize: 128
   environment:
-    GREETING_AUDIENCE: ${self:custom.audience.${self:provider.stage}}
+    GREETING_AUDIENCE: ${self:custom.audience.${self:custom.stage}}
 
 functions:
   hello:
@@ -21,10 +22,14 @@ functions:
     environment:
       GREETING_PREFIX: 'Hello'
     events:
-      - http: GET /hello
+      - http:
+          path: /hello
+          method: get
   goodbye:
     handler: index.handler
     environment:
       GREETING_PREFIX: 'Goodbye'
     events:
-      - http: GET /goodbye
+      - http:
+          path: /goodbye
+          method: get
