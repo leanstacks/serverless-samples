@@ -28,6 +28,8 @@ yarn install
 
 ### Provision the Custom Domain
 
+Update the `serverless.yml` file to use your domain name.
+
 Run the following command in the sample base directory:
 
 ```
@@ -83,7 +85,7 @@ Serverless Domain Manager: Info: Created API mapping '(none)' for serverless-sam
 Serverless Domain Manager: Summary: Distribution Domain Name
 Serverless Domain Manager:    Domain Name: serverless-samples.leanstacks.net
 Serverless Domain Manager:    Target Domain: d3v5lodm8ouxhe.cloudfront.net
-Serverless Domain Manager:    Hosted Zone Id: Z2FDTNDATAQYW2
+Serverless Domain Manager:    Hosted Zone Id: Z3FDTNDATAQYW2
 ```
 
 ## Remove from AWS
