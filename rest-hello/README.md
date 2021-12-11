@@ -46,7 +46,7 @@ sls remove
 
 or
 
-sls remove --aws-profile [provileName]
+sls remove --aws-profile [profileName]
 ```
 
 ## Run
