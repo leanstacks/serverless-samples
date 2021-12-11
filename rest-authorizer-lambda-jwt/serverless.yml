@@ -30,14 +30,14 @@ custom:
       -----END RSA PRIVATE KEY-----
     qa: ""
     prod: ""
+  stage: ${opt:stage, self:provider.stage}
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  stage: dev
   region: us-east-1
   memorySize: 128
-  timeout: 10
 
 functions:
   getMessage:
@@ -63,9 +63,9 @@ functions:
   requestToken:
     handler: handler/tokens.handler
     environment:
-      AUDIENCE: ${self:custom.audience.${self:provider.stage}}          # issuer placed within the token
-      ISSUER: ${self:custom.issuer.${self:provider.stage}}              # issuer placed within the token
-      PRIVATE_KEY: ${self:custom.privateKey.${self:provider.stage}}     # private key to sign the token
+      AUDIENCE: ${self:custom.audience.${self:custom.stage}}          # issuer placed within the token
+      ISSUER: ${self:custom.issuer.${self:custom.stage}}              # issuer placed within the token
+      PRIVATE_KEY: ${self:custom.privateKey.${self:custom.stage}}     # private key to sign the token
     events:
       - http: 
           path: /auth/request_token
@@ -73,6 +73,6 @@ functions:
   tokenAuthorizer:
     handler: handler/authorizer.handler
     environment:
-      AUDIENCE: ${self:custom.audience.${self:provider.stage}}        # issuer placed within the token
-      ISSUER: ${self:custom.issuer.${self:provider.stage}}            # issuer to verify the token
-      PUBLIC_KEY: ${self:custom.publicKey.${self:provider.stage}}     # public key to verify the token
+      AUDIENCE: ${self:custom.audience.${self:custom.stage}}        # issuer placed within the token
+      ISSUER: ${self:custom.issuer.${self:custom.stage}}            # issuer to verify the token
+      PUBLIC_KEY: ${self:custom.publicKey.${self:custom.stage}}     # public key to verify the token

@@ -1,4 +1,4 @@
-# Serverless Samples: rest-hello
+# Serverless Samples: rest-authorizer-lambda
 
 This sample serverless application is a basic example of how to implement a Lambda Authorizer for a REST API.
 

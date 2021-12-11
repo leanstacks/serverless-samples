@@ -6,6 +6,9 @@ const PUBLIC_KEY = process.env.PUBLIC_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 exports.generate = (apiKey) => {
+
+  console.log('Token::generate');
+
   const payload = {
     apiKey
   };
@@ -21,9 +24,13 @@ exports.generate = (apiKey) => {
   };
 
   return jwt.sign(payload, PRIVATE_KEY, signOptions);
+
 };
 
 exports.verify = (token) => {
+
+  console.log('Token::verify');
+
   const verifyOptions = {
     audience: AUDIENCE,
     issuer: ISSUER,
@@ -32,4 +39,5 @@ exports.verify = (token) => {
   };
 
   return jwt.verify(token, PUBLIC_KEY, verifyOptions);
+
 };
