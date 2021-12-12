@@ -4,10 +4,13 @@ plugins:
   - serverless-step-functions
   - serverless-pseudo-parameters
 
+custom:
+  stage: ${opt:stage, self:provider.stage}
+
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  stage: dev
   region: us-east-1
   memorySize: 128
 
@@ -20,7 +23,7 @@ functions:
 stepFunctions:
   stateMachines:
     createMessage:
-      name: ${self:service}-${self:provider.stage}-createMessage
+      name: ${self:service}-${self:custom.stage}-createMessage
       events:
         - http:
             path: /messages
@@ -31,9 +34,10 @@ stepFunctions:
         States:
           CreateMessage:
             Type: Task
-            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-createMessage"
+            Resource:
+              Fn::GetAtt: [createMessage, Arn] # reference function in this file
             Next: ToUppercase
           ToUppercase:
             Type: Task
-            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-toUppercase"
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:custom.stage}-toUppercase" # build reference to function in this file or external
             End: true
