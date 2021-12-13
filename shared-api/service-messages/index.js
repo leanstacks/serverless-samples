@@ -5,10 +5,10 @@ const app = express();
 const messages = [{
   id: 'hello',
   message: 'Hello World!'
-},{
+}, {
   id: 'goodbye',
   message: 'Goodbye World!'
-},{
+}, {
   id: 'default',
   message: 'What\'s up?'
 }];
@@ -18,9 +18,18 @@ const _findMessage = (id) => {
 };
 
 /**
+ * List all messages.
+ * Handles GET requests to the '/messages' endpoint.
+ */
+app.get('/messages', function (req, res) {
+  res.json(messages);
+});
+
+/**
+ * Find a message by the identifier.
  * Handles GET requests to the '/messages/:messageId' endpoint.
  */
-app.get('/messages/:messageId', function(req,res) {
+app.get('/messages/:messageId', function (req, res) {
   const messageId = req.params.messageId;
 
   let message = _findMessage(messageId);
@@ -30,13 +39,6 @@ app.get('/messages/:messageId', function(req,res) {
   }
 
   res.json(message);
-});
-
-/**
- * Handles GET requests to the '/messages' endpoint.
- */
-app.get('/messages', function(req,res) {
-  res.json(messages);
 });
 
 /**
