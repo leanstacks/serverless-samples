@@ -1,14 +1,14 @@
 {
   "name": "serverless-samples-step-functions",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "repository": "https://github.com/mwarman/serverless-samples",
-  "author": "Matt Warman",
+  "author": "Matt Warman <leanstacker@gmail.com>",
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {},
   "devDependencies": {
-    "serverless-pseudo-parameters": "^2.4.0",
-    "serverless-step-functions": "^1.16.0"
+    "serverless-pseudo-parameters": "2.6.1",
+    "serverless-step-functions": "3.4.0"
   }
 }

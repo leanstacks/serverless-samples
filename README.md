@@ -2,7 +2,7 @@
 
 Samples and snippets of application components constructed using the Serverless Framework and Amazon Web Services (AWS). 
 
-All samples are authored in JavaScript for the Node.js 8.10 AWS Lambda runtime.
+All samples are authored in JavaScript for the Node.js AWS Lambda runtime.
 
 ## Acknowledgements
 
@@ -10,7 +10,7 @@ This is a [LEAN**STACKS**](https://leanstacks.com/) solution.
 
 ## What's Inside
 
-Each sub-directory contains a sample project illustrating a specific serverless feature or group of features. Some samples build upon concepts from other projects. 
+Each sub-directory contains a sample project illustrating a specific serverless feature or group of features. Some samples build upon concepts from other samples. 
 
 If you are new to serverless software engineering or simply looking for a table of contents, the list below is a general guideline for exploring the samples in this repository in a meaningful order.
 
@@ -22,7 +22,7 @@ A "Hello World" REST API demonstrating how to handle events from the API Gateway
 
 This sample serverless application is a basic example of how to implement REST services using Express. Data for the REST resource is persisted in DynamoDB.
 
-This sample application is the introductory example for using DynamoDB. This project contains other DynamoDB sample projects which build upon this one.
+This sample application is the introductory example for using DynamoDB. This project contains other DynamoDB samples which build upon this one.
 
 ### rest-dynamodb-ondemand
 
@@ -56,7 +56,7 @@ This sample illustrates how to implement multiple REST services for different re
 
 ### test-jest
 
-This sample demonstrates how to configure, code, and execute unit tests for a serverless application component using the Jest testing framework.
+This sample demonstrates how to configure, author, and execute unit tests for a serverless application component using the Jest testing framework.
 
 ### rest-environment
 
@@ -66,7 +66,7 @@ This sample serverless application illustrates how to implement REST services wh
 
 This sample builds upon the `rest-environment` sample by sourcing the environment variables from AWS Systems Manager Parameter Store, a.k.a. SSM.
 
-### rest-lambda-authorizer
+### rest-authorizer-lambda
 
 This sample serverless application is a basic example of how to implement a Lambda Authorizer, formerly called a *Custom Authorizer*, for a REST API.
 
@@ -76,7 +76,7 @@ This sample application is the introductory example for using Lambda Authorizers
 
 This sample serverless application is an example of how to implement a Lambda Authorizer, formerly called a *Custom Authorizer*, with JSON Web Tokens (JWT) for a REST API.
 
-### rest-cognito-authorizer
+### rest-authorizer-cognito
 
 This sample serverless application is a basic example of how to implement a Cognito Authorizer which authenticates requests to a REST API with a Cognito User Pool.
 
@@ -84,7 +84,7 @@ This sample serverless application is a basic example of how to implement a Cogn
 
 This sample serverless application is an example of how to implement a shared API Gateway REST API.
 
-Normally, each serverless specification provisions a dedicated API Gateway REST API when deployed. However, by using outputs from the `api` project in the `service` serverless specification, the service REST API endpoints are created within the API Gateway REST API provisioned in the `api` project.
+Normally, each serverless specification provisions a dedicated API Gateway REST API when deployed. However, by using outputs from an `api` componnet in another `service` serverless specification, the service REST API endpoints are created within the API Gateway REST API provisioned by the `api` component.
 
 ### shared-api-custom-domain
 
@@ -100,7 +100,7 @@ This sample serverless application illustrates how to implement a simple Step Fu
 
 Step functions state machine executions are asynchronous. This sample project demonstrates how to invoke a step function state machine programmatically and how to poll the execution history events to determine when execution has completed and extract the resulting output.
 
-While it is not typical to invoke a Step Functions State Machine *synchronously*, this sample illustrates several useful AWS SDK calls for assessing the status of a State Machine invokation.
+While it is not typical to invoke a Step Functions State Machine *synchronously*, this sample illustrates several useful AWS SDK calls for assessing the status of a State Machine invocation.
 
 ## See Also
 

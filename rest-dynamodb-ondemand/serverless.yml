@@ -1,12 +1,12 @@
-service: samples-dynamodb-ondemand
+service: samples-rest-dynamodb-ondemand
 
 custom:
   tableName: 'users-table-${self:provider.stage}'
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  stage: dev
   region: us-east-1
   iamRoleStatements:
     - Effect: Allow
@@ -27,7 +27,7 @@ functions:
     handler: index.handler
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http: 'ANY /{proxy+}'
 
 resources:
   Resources:

@@ -10,5 +10,8 @@ yarn-*.log
 .serverless
 */.serverless
 
+# DynamoDB Local Files
+.dynamodb
+
 # Sample-Specific Files
 rest-cognito-authorizer/auth.json

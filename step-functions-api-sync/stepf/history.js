@@ -1,5 +1,8 @@
-const AWS = require('aws-sdk');
-const stepfunctions = new AWS.StepFunctions();
+const { SFNClient, GetExecutionHistoryCommand } = require('@aws-sdk/client-sfn');
+
+// AWS SDK v3 - Step Functions Client
+const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+const sfnClient = new SFNClient({ region: AWS_REGION });
 
 /**
  * Uses the AWS SDK to obtain the event history for a Step Functions State Machine 
@@ -8,15 +11,20 @@ const stepfunctions = new AWS.StepFunctions();
  * @returns An array of event history objects describing the state machine execution status.
  */
 const getExecutionHistory = async (executionArn = '') => {
-  console.log(`getExecutionHistory for executionArn: ${executionArn}`);
+
+  console.log('History::getExecutionHistory');
+  console.log(`executionArn: ${executionArn}`);
+
   const params = {
     executionArn,
     maxResults: 0,
     reverseOrder: true
   };
-  const events = await stepfunctions.getExecutionHistory(params).promise();
-  console.log(`Execution events:\n${JSON.stringify(events, null, 2)}`);
-  return events;
+
+  const response = await sfnClient.send(new GetExecutionHistoryCommand(params));
+  console.log(`response:\n${JSON.stringify(response, null, 2)}`);
+
+  return response;
 };
 exports.getExecutionHistory = getExecutionHistory;
 
@@ -41,7 +49,10 @@ const timeout = (millis = 0) => {
  * @returns An event history object matching the supplied event type and name.
  */
 const pollExecutionHistory = async (executionArn, eventType = 'PassStateExited', eventName = 'EndState', interval = 250) => {
-  console.log(`pollExecutionHistory for eventType:${eventType} and eventName:${eventName} at interval:${interval}ms`);
+
+  console.log('History::pollExecutionHistory');
+  console.log(`eventType:${eventType} and eventName:${eventName} at interval:${interval}ms`);
+
   let event;
   do {
     // Using the timeout function with Promise.all slows the loop, ensuring getExecutionHistory 
@@ -51,8 +62,9 @@ const pollExecutionHistory = async (executionArn, eventType = 'PassStateExited',
       getExecutionHistory(executionArn)
     ]);
     event = executionHistory.events.find((event) => event.type === eventType && event.stateExitedEventDetails.name === eventName);
-    console.log(`Event:\n${JSON.stringify(event, null, 2)}`);
-  } while(!event) // exit the loop if a matching event is found, otherwise poll the event history again
+    console.log(`event:\n${JSON.stringify(event, null, 2)}`);
+  } while (!event) // exit the loop if a matching event is found, otherwise poll the event history again
+
   return event;
 };
 exports.pollExecutionHistory = pollExecutionHistory;

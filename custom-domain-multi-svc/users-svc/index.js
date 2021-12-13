@@ -3,13 +3,13 @@ const express = require('express');
 const app = express();
 
 // GET get all users endpoint
-app.get('/users', function(req,res) {
+app.get('/users', function (req, res) {
   const users = [{
-    userId: 'mwarman',
-    name: 'Matt Warman'
-  },{
-    userId: 'jmailbot',
-    name: 'Joe Mailbot'
+    userId: 'jwick',
+    name: 'John Wick'
+  }, {
+    userId: 'pblart',
+    name: 'Paul Blart'
   }];
 
   res.json(users);

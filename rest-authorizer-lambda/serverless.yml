@@ -1,0 +1,25 @@
+service: samples-rest-authorizer-lambda
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+
+functions:
+  hello:
+    handler: index.handler
+    events:
+      - http: 
+          path: /hello
+          method: get
+          authorizer: 
+            name: simpleTokenAuthorizer
+            resultTtlInSeconds: 300     # default response cache time-to-live is 5 minutes
+            identitySource: method.request.header.Authorization     # default token location is Authorization header
+  simpleTokenAuthorizer:
+    handler: authorizer.authorize
