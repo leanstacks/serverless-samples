@@ -1,0 +1,22 @@
+service: samples-rest-authorizer-cognito
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+  timeout: 6
+
+functions:
+  hello:
+    handler: index.handler
+    events:
+      - http: 
+          path: /hello
+          method: get
+          authorizer: 
+            arn: arn:aws:cognito-idp:us-east-1:854599584783:userpool/us-east-1_shfaXI022

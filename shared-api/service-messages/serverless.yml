@@ -9,28 +9,28 @@ service: samples-shared-api-messages
 
 custom:
   apiStackName: samples-shared-api-base   # The CloudFormation stack name (minus stage) where the API is created.
+  stage: ${opt:stage, self:provider.stage}
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  stage: dev
   region: us-east-1
   memorySize: 128
-  timeout: 10
   apiGateway:   # Specify the API to which HTTP endpoints are attached. Reference the Outputs from the API project.
-    restApiId: ${cf:${self:custom.apiStackName}-${self:provider.stage}.RestApiId}
-    restApiRootResourceId: ${cf:${self:custom.apiStackName}-${self:provider.stage}.RestApiRootResourceId}
+    restApiId: ${cf:${self:custom.apiStackName}-${self:custom.stage}.RestApiId}
+    restApiRootResourceId: ${cf:${self:custom.apiStackName}-${self:custom.stage}.RestApiRootResourceId}
 
 functions:
-  getMessage:
-    handler: index.handler
-    events:
-      - http: 
-          path: /messages/{proxy+}
-          method: get
   listMessages:
     handler: index.handler
     events:
       - http: 
           path: /messages
+          method: get
+  getMessage:
+    handler: index.handler
+    events:
+      - http: 
+          path: /messages/{proxy+}
           method: get

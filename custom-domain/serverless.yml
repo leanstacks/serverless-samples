@@ -14,7 +14,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs14.x
   stage: dev
   region: us-east-1
   memorySize: 128
@@ -23,8 +23,12 @@ functions:
   hello:
     handler: index.handler
     events:
-      - http: GET /hello
+      - http:
+          path: /hello
+          method: get
   goodbye:
     handler: index.handler
     events:
-      - http: GET /goodbye
+      - http:
+          path: /goodbye
+          method: get

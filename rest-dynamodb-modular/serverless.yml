@@ -5,46 +5,57 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs8.10
-  stage: ${opt:stage, 'dev'}
+  runtime: nodejs14.x
+  stage: dev
   region: us-east-1
   memorySize: 128
-  timeout: 10
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource:
-        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
   environment:
     USERS_TABLE: ${self:custom.tableName}
 
 functions:
   getUser:
-    handler: index.handler
+    handler: src/handler/gateway.handle
     events:
-      - http: 'GET /users/{proxy+}'
-  getUsers:
-    handler: index.handler
+      - http:
+          path: /users/{proxy+}
+          method: get
+  listUsers:
+    handler: src/handler/gateway.handle
     events:
-      - http: 'GET /users'
+      - http:
+          path: /users
+          method: get
   createUser:
-    handler: index.handler
+    handler: src/handler/gateway.handle
     events:
-      - http: 'POST /users'
+      - http:
+          path: /users
+          method: post
   updateUser:
-    handler: index.handler
+    handler: src/handler/gateway.handle
     events:
-      - http: 'PUT /users/{proxy+}'
+      - http:
+          path: /users/{proxy+}
+          method: put
   deleteUser:
-    handler: index.handler
+    handler: src/handler/gateway.handle
     events:
-      - http: 'DELETE /users/{proxy+}'
+      - http:
+          path: /users/{proxy+}
+          method: delete
 
 resources:
   Resources:
@@ -59,7 +70,5 @@ resources:
           -
             AttributeName: userId
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
         TableName: ${self:custom.tableName}
