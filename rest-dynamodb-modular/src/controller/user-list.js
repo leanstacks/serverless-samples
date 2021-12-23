@@ -22,9 +22,9 @@ const listUsers = async (req, res) => {
 
   try {
 
-    const notes = await UserService.list();
+    const users = await UserService.list();
     res.append('Access-Control-Allow-Origin', ALLOW_ORIGIN);
-    res.json(notes);
+    res.json(users);
 
   } catch (error) {
 
